@@ -2,9 +2,6 @@
 
 Scripts to help the deployement and maintenance of SQL solutions.
 
-## Deploy
-Coming soon
-
 ## Maintenance
 Some scripts to diagnose performances issues and maintain databases:
 * IndexFragementation > Check the fragmentation of indexes in a specific database.

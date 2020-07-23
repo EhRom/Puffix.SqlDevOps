@@ -16,6 +16,7 @@ DECLARE @indexInformation TABLE
 	TableName		sysname not null,
 	IndexName		sysname not null,
 	IsColumnstore	bit not null,
+	AllowPageLocks	bit not null,
 	PartitionCount	int not null,
 	PartitionNumber	int not null,
 	Fragementation	numeric(10,7) not null,
@@ -49,6 +50,7 @@ SELECT  OBJECT_SCHEMA_NAME(itm.[object_id]) AS SchemaName,
 		OBJECT_NAME(itm.[object_id]) AS TableName,
 		idx.[name] AS IndexName,
 		IIF(idx.[type] IN (5, 6), 1, 0) AS IsColumnstore,
+		ISNULL(idx.[allow_page_locks], 0) AS AllowPageLocks,
 		itm.PartitionCount,
 		ISNULL(prd.partition_number, -1) AS PartitionNumber,
 		itm.avg_fragmentation_in_percent AS Fragementation
@@ -60,27 +62,28 @@ DECLARE @schemaName sysname;
 DECLARE @tableName sysname;
 DECLARE @indexName sysname;
 DECLARE @isColumnstore bit;
+DECLARE @allowPageLocks bit;
 DECLARE @partitionNumber int;
 DECLARE @partitionCount int;
 DECLARE @fragmentation float;
 DECLARE @sqlCommand varchar(8000);
 
 DECLARE indexCursor CURSOR FOR 
-	SELECT SchemaName, TableName, IndexName, IsColumnstore, PartitionCount, PartitionNumber, Fragementation
+	SELECT SchemaName, TableName, IndexName, IsColumnstore, AllowPageLocks, PartitionCount, PartitionNumber, Fragementation
 	FROM @indexInformation;
 
 OPEN indexCursor;
 
 FETCH NEXT FROM indexCursor
-	INTO @schemaName, @tableName, @indexName, @isColumnstore, @partitionNumber, @partitionCount, @fragmentation;
+	INTO @schemaName, @tableName, @indexName, @isColumnstore, @allowPageLocks, @partitionNumber, @partitionCount, @fragmentation;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	PRINT 'Index ' + CAST(@indexName AS varchar) + ' - Table [' +  CAST(@schemaName AS varchar) + '].[' +  CAST(@tableName AS varchar) + '] - Fragmentation ' + CAST(@fragmentation AS varchar) + ' - Partition ' + CAST(@partitionNumber AS varchar) + '/' + CAST(@partitionCount AS varchar);
+	PRINT 'Index ' + CAST(@indexName AS varchar) + ' - Table [' +  CAST(@schemaName AS varchar) + '].[' +  CAST(@tableName AS varchar) + '] - Fragmentation ' + CAST(@fragmentation AS varchar) + ' - Page Lock ' + CAST(@allowPageLocks AS varchar) + ' - Partition ' + CAST(@partitionNumber AS varchar) + '/' + CAST(@partitionCount AS varchar);
 
 	SET @sqlCommand = 'ALTER INDEX [' + @indexName + '] ON [' + @schemaName + '].[' + @tableName + '] ';
 
-	IF @fragmentation >= @rebuildTreshold
+	IF @fragmentation >= @rebuildTreshold OR @allowPageLocks = 0
 	BEGIN
 		PRINT 'Reconstruction de l''index ' + CAST(@indexName AS varchar);
 		SET @sqlCommand = @sqlCommand + 'REBUILD';
@@ -101,7 +104,7 @@ BEGIN
 	EXEC (@sqlCommand);
 	
 	FETCH NEXT FROM indexCursor
-		INTO @schemaName, @tableName, @indexName, @isColumnstore, @partitionNumber, @partitionCount, @fragmentation;
+		INTO @schemaName, @tableName, @indexName, @isColumnstore, @allowPageLocks, @partitionNumber, @partitionCount, @fragmentation;
 END
 
 CLOSE indexCursor;
