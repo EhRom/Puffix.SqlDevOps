@@ -3,7 +3,9 @@
 Scripts to help the deployement and maintenance of SQL solutions.
 
 ## Deploy
-Coming soon
+Some powershell commands to manage secure strings : [GenerateCredentialsAndSecret.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/GenerateCredentialsAndSecret.md). 
+
+More to come soon.
 
 ## Maintenance
 Some scripts to diagnose performances issues and maintain databases:
