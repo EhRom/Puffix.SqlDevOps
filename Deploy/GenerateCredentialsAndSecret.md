@@ -73,6 +73,8 @@ Write-Host $key
 
 The base 64 string can then stored to a file.
 
+Note: the script [CreateKey.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.ps1) (documentation: *[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.md)*) can be used to generate a key.
+
 ## Save the secure string to a file and load it from the file with a key
 
 Display the secure string in a powershell console, or save it into a variable:
