@@ -6,8 +6,8 @@ param (
 	[ValidateScript({If ($_) { $True } else { $False } })]
 	[string] $credentialsPath,
 		
-	[Parameter(HelpMessage="Path to thek key (base 64 format) to use to read the credentials.")]
-	[string] $keyPath
+	[Parameter(HelpMessage="Key (base 64 format) used to read and encrypt the credentials.")]
+	[string] $key
 )
 
 # Collection of credentials
@@ -93,20 +93,6 @@ Class OpsCredential {
     }
 }
 
-function LoadKey(
-    [string] $keyPath
-) {
-    [string] $key = $null
-    if (-not [string]::IsNullOrEmpty($keyPath)) {
-        Write-Host "Load the key from the file '$($keyPath)'" -Foreground Cyan
-        $key = Get-Content $keyPath
-    } else {
-        Write-Host "The key is not specified" -Foreground Yellow
-    }
-    
-    return $key
-}
-
 function LoadCredentials(
     [string] $credentialsPath,
     [string] $key
@@ -187,8 +173,6 @@ function SaveCredentials(
         Write-Host "The container does not contain any new passwords. The container is not saved" -Foreground Yellow
     }
 }
-
-[string] $key = LoadKey($keyPath)
 
 [OpsCredentialContainer] $credentialContainer = LoadCredentials $credentialsPath $key
 

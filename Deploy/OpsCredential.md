@@ -31,7 +31,9 @@ The script is used with the following parameters:
 * $keyPath: the path to the file which contains the encryption key.
 
 ```powershell
-.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -keyPath .\keyfile.key
+$keyPath = "<Path to the key>"
+$key =  Get-Content $keyPath
+.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
 ```
 
 The following file is then generated:
@@ -87,7 +89,9 @@ To change a password or add new credentials, replace the *encryptedPassword* fie
 
 Execute the **[ManageOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredential.ps1)** script another time:
 ```powershell
-.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -keyPath .\keyfile.key
+$keyPath = "<Path to the key>"
+$key =  Get-Content $keyPath
+.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
 ```
 
 The scripts generates the following content:
@@ -121,13 +125,17 @@ The scripts generates the following content:
 ## Credential container encryption
 The **[EncryptOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/EncryptOpsCredential.ps1)** is used to encrypt the credential container (the JSON file based on the **[BaseCredentialContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialContainer.json)** model):
 ```powershell
-.\EncryptOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -encryptedCredentialsPath .\CredentialContainer.enc -keyPath .\keyfile.key
+$keyPath = "<Path to the key>"
+$key =  Get-Content $keyPath
+.\EncryptOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -encryptedCredentialsPath .\CredentialContainer.enc -key $key
 ```
 
 ## Credential container decryption
 The **[DecryptOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/DecryptOpsCredential.ps1)** is used to decrypt the encrypted credential container:
 ```powershell
-.\DecryptOpsCredential.ps1 -encryptedCredentialsPath .\CredentialContainer.enc -credentialsPath .\CredentialContainer.json -keyPath .\keyfile.key
+$keyPath = "<Path to the key>"
+$key =  Get-Content $keyPath
+.\DecryptOpsCredential.ps1 -encryptedCredentialsPath .\CredentialContainer.enc -credentialsPath .\CredentialContainer.json -key $key
 ```
 
 ## Next
@@ -135,7 +143,9 @@ To use the credentials in your own scripts, the  **[UseOpsCredential.ps1](https:
 
 Here is a sample to retrieve a credential:
 ```powershell
-.\UseOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -keyPath .\keyfile.key
+$keyPath = "<Path to the key>"
+$key =  Get-Content $keyPath
+.\UseOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
 
 $credentialName = "credentialB"
 Write-Host "Find the '$credentialName' credential."

@@ -9,29 +9,15 @@ param (
 	[ValidateScript({If ($_) { $True } else { $False } })]
 	[string] $encryptedCredentialsPath,
 
-	[Parameter(Mandatory=$true, HelpMessage="Path to thek key (base 64 format) to use to read the credentials.")]
+	[Parameter(Mandatory=$true, HelpMessage="Key (base 64 format) used to read and encrypt the credentials.")]
 	[ValidateScript({If ($_) { $True } else { $False } })]
-	[string] $keyPath
+	[string] $key
 )
-
-function LoadKey(
-    [string] $keyPath
-) {
-    [string] $key = $null
-    if (-not [string]::IsNullOrEmpty($keyPath)) {
-        Write-Host "Load the key from the file '$($keyPath)'" -Foreground Cyan
-        $key = Get-Content $keyPath
-    } else {
-        Write-Host "The key is not specified" -Foreground Yellow
-    }
-    
-    return  [System.Convert]::FromBase64String($key)
-}
 
 function EncryptCredentials(
     [string] $credentialsPath,
     [string] $encryptedCredentialsPath,
-    [byte[]] $key
+    [string] $key
 ) {
     Write-Host "Load the credentials file content $credentialsPath"
     $credentialsFileContent = Get-Content -Path $credentialsPath | Out-String
@@ -41,14 +27,14 @@ function EncryptCredentials(
 
     Write-Host "Encrypt content of the file"
     $secureString = ConvertTo-SecureString -String $jsonContainerContent -AsPlainText -Force
-    # $secureString = ConvertTo-SecureString -String $jsonContainerContent -AsPlainText
+    
+    Write-Host "Load key"
+    [byte[]] $keyContent = [System.Convert]::FromBase64String($key)
 
     Write-Host "Save the encrypted content to the file $($encryptedCredentialsPath)"
-    ConvertFrom-SecureString -SecureString $secureString -Key $key | Out-File $encryptedCredentialsPath
+    ConvertFrom-SecureString -SecureString $secureString -Key $keyContent | Out-File $encryptedCredentialsPath
 
     Write-Host "The credentials are encrypted into the file $($encryptedCredentialsPath)" -Foreground Green
 }
-
-[byte[]] $key = LoadKey($keyPath)
 
 EncryptCredentials $credentialsPath $encryptedCredentialsPath $key
