@@ -149,11 +149,14 @@ $key =  Get-Content $keyPath
 
 $credentialName = "credentialB"
 Write-Host "Find the '$credentialName' credential."
-$credential = $credentialContainer.GetCredential($credentialName)
+$opsCredential = $credentialContainer.GetCredential($credentialName)
 
-if ($credential -neq $null) {
-    Write-Host "The '$credentialName' credential exists. Login:$($credential.loginName)" -Foreground Green
+if ($opsCredential -ne $null) {
+    Write-Host "The '$credentialName' credential exists. Login:$($opsCredential.loginName)" -Foreground Green
 } else {
     Write-Host "The '$credentialName' credential was not found." -Foreground Yellow
 }
+
+$pwshCredential = New-Object System.Management.Automation.PSCredential ($opsCredential.loginName, $opsCredential.GetPassword($key))
+
 ```

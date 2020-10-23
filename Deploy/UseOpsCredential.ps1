@@ -154,7 +154,7 @@ function DisplayCredentials(
 
 [OpsCredentialContainer] $credentialContainer = LoadCredentials $credentialsPath $key
 
-DisplayCredentials $credentialContainer
+# Uncomment this piece of code to dsplay the credentials stored in the file > # DisplayCredentials $credentialContainer $key
 
 # Export the credential container
 $global:credentialContainer = $credentialContainer
