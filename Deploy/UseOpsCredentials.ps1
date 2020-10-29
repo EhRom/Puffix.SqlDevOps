@@ -11,12 +11,12 @@ param (
 )
 
 # Collection of credentials
-Class OpsCredentialContainer {
+Class OpsCredentialsContainer {
     [bool] $isModified
 	[System.Collections.Generic.Dictionary[string, OpsCredential]] $credentials
 
-	OpsCredentialContainer() {
-		$this.credentials = New-Object "System.Collections.Generic.Dictionary[string, OpsCredential]"
+	OpsCredentialsContainer() {
+        $this.credentials = New-Object "System.Collections.Generic.Dictionary[string, OpsCredential]"
         $this.isModified = $false
 	}
 
@@ -102,7 +102,7 @@ function LoadCredentials(
     $credentialsFileContent = Get-Content -Path $credentialsPath | Out-String
     $coreCredentialsContainer = ConvertFrom-Json $credentialsFileContent
 
-    [OpsCredentialContainer] $credentialContainer = New-Object OpsCredentialContainer
+    [OpsCredentialsContainer] $credentialsContainer = New-Object OpsCredentialsContainer
     
     # Retrieve credentials names (in the dictionary).
     $credentialNames = Get-Member -InputObject $coreCredentialsContainer.credentials -Membertype NoteProperty | Select-Object -Property Name
@@ -122,29 +122,29 @@ function LoadCredentials(
                 Write-Host "A new password is detected" -Foreground Magenta
                 $currentCredential.SetPassword($credentialProperties.newPassword, $key)
 
-                $credentialContainer.isModified = $true
+                $credentialsContainer.isModified = $true
             } else {
                 $currentCredential.SetEncryptedPassword($credentialProperties.encryptedPassword)
             }
             
-            $credentialContainer.AddCredential($currentCredential)
+            $credentialsContainer.AddCredential($currentCredential)
         }
     }
 
-    return $credentialContainer
+    return $credentialsContainer
 }
 
 function DisplayCredentials(
-    [OpsCredentialContainer] $credentialContainer,
+    [OpsCredentialsContainer] $credentialsContainer,
     [string] $key
 ) {
-    Write-Host "$($credentialContainer.credentials.Count) credentials to display." -Foreground Cyan
+    Write-Host "$($credentialsContainer.credentials.Count) credentials to display." -Foreground Cyan
 
-    if ($credentialContainer.isModified) {
+    if ($credentialsContainer.isModified) {
         Write-Host "The container contains new passwords"
     }
 
-    foreach ($currentCredential in $credentialContainer.credentials.Values) {
+    foreach ($currentCredential in $credentialsContainer.credentials.Values) {
         Write-Host "$($currentCredential.name) > login: $($currentCredential.loginName)" -Foreground Gray
         
         # Display cleared passwords:
@@ -152,30 +152,9 @@ function DisplayCredentials(
     }
 }
 
-function SaveCredentials(
-    [OpsCredentialContainer] $credentialContainer,
-    [string] $credentialsPath,
-    [string] $key
-) {
-    Write-Host "Save the credentials to the file '$($credentialsPath)'"
-    
-    if ($credentialContainer.isModified) {
-        Write-Host "The container contains new passwords"
+[OpsCredentialsContainer] $credentialsContainer = LoadCredentials $credentialsPath $key
 
-        # Remove the isModified private property.
-        [PSCustomObject]$credentialContainer = Select-Object -InputObject $credentialContainer -Property * -ExcludeProperty isModified
+# Uncomment this piece of code to dsplay the credentials stored in the file > # DisplayCredentials $credentialsContainer $key
 
-        $jsonContainerContent = ConvertTo-Json $credentialContainer
-        Out-File -FilePath $credentialsPath -InputObject $jsonContainerContent
-
-        Write-Host "The container is saved: $($credentialsPath)" -Foreground Green
-    } else {
-        Write-Host "The container does not contain any new passwords. The container is not saved" -Foreground Yellow
-    }
-}
-
-[OpsCredentialContainer] $credentialContainer = LoadCredentials $credentialsPath $key
-
-DisplayCredentials $credentialContainer
-
-SaveCredentials $credentialContainer $credentialsPath $key
+# Export the credential container
+$global:credentialsContainer = $credentialsContainer

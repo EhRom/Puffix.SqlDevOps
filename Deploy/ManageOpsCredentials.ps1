@@ -11,11 +11,11 @@ param (
 )
 
 # Collection of credentials
-Class OpsCredentialContainer {
+Class OpsCredentialsContainer {
     [bool] $isModified
 	[System.Collections.Generic.Dictionary[string, OpsCredential]] $credentials
 
-	OpsCredentialContainer() {
+	OpsCredentialsContainer() {
 		$this.credentials = New-Object "System.Collections.Generic.Dictionary[string, OpsCredential]"
         $this.isModified = $false
 	}
@@ -102,7 +102,7 @@ function LoadCredentials(
     $credentialsFileContent = Get-Content -Path $credentialsPath | Out-String
     $coreCredentialsContainer = ConvertFrom-Json $credentialsFileContent
 
-    [OpsCredentialContainer] $credentialContainer = New-Object OpsCredentialContainer
+    [OpsCredentialsContainer] $credentialContainer = New-Object OpsCredentialsContainer
     
     # Retrieve credentials names (in the dictionary).
     $credentialNames = Get-Member -InputObject $coreCredentialsContainer.credentials -Membertype NoteProperty | Select-Object -Property Name
@@ -135,7 +135,7 @@ function LoadCredentials(
 }
 
 function DisplayCredentials(
-    [OpsCredentialContainer] $credentialContainer,
+    [OpsCredentialsContainer] $credentialContainer,
     [string] $key
 ) {
     Write-Host "$($credentialContainer.credentials.Count) credentials to display." -Foreground Cyan
@@ -152,9 +152,30 @@ function DisplayCredentials(
     }
 }
 
-[OpsCredentialContainer] $credentialContainer = LoadCredentials $credentialsPath $key
+function SaveCredentials(
+    [OpsCredentialsContainer] $credentialContainer,
+    [string] $credentialsPath,
+    [string] $key
+) {
+    Write-Host "Save the credentials to the file '$($credentialsPath)'"
+    
+    if ($credentialContainer.isModified) {
+        Write-Host "The container contains new passwords"
 
-# Uncomment this piece of code to dsplay the credentials stored in the file > # DisplayCredentials $credentialContainer $key
+        # Remove the isModified private property.
+        [PSCustomObject]$credentialContainer = Select-Object -InputObject $credentialContainer -Property * -ExcludeProperty isModified
 
-# Export the credential container
-$global:credentialContainer = $credentialContainer
+        $jsonContainerContent = ConvertTo-Json $credentialContainer
+        Out-File -FilePath $credentialsPath -InputObject $jsonContainerContent
+
+        Write-Host "The container is saved: $($credentialsPath)" -Foreground Green
+    } else {
+        Write-Host "The container does not contain any new passwords. The container is not saved" -Foreground Yellow
+    }
+}
+
+[OpsCredentialsContainer] $credentialContainer = LoadCredentials $credentialsPath $key
+
+DisplayCredentials $credentialContainer
+
+SaveCredentials $credentialContainer $credentialsPath $key

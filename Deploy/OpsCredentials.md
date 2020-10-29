@@ -3,7 +3,7 @@
 These scripts are a way to use secured credentials and secrets without the need to store them in your source control.
 
 ## Sample credentials file
-The **[BaseCredentialContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialContainer.json)** file is a sample which contains some sample credentials:
+The **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialsContainer.json)** file is a sample which contains some sample credentials:
 ```json
 {
     "credentials": {
@@ -24,16 +24,16 @@ The **[BaseCredentialContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/b
 You can create use this sample file to add your own credentials.
 
 ## First level encryption script
-Once done, the **[ManageOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredential.ps1)** is used to add a first level of encryption of the password. A key file is needed for this script (**[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.md)**).
+Once done, the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredentials.ps1)** is used to add a first level of encryption of the password. A key file is needed for this script (**[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.md)**).
 
 The script is used with the following parameters:
-* $credentialsPath: the path to target the JSON file you customized previously,
-* $keyPath: the path to the file which contains the encryption key.
+* ***credentialsPath***: the path to target the JSON file you customized previously,
+* ***key***: the encryption key in the base64 format.
 
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
-.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
+.\ManageOpsCredentials.ps1 -credentialsPath .\CredentialsContainer.json -key $key
 ```
 
 The following file is then generated:
@@ -87,11 +87,11 @@ To change a password or add new credentials, replace the *encryptedPassword* fie
 }
 ```
 
-Execute the **[ManageOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredential.ps1)** script another time:
+Execute the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredentials.ps1)** script another time:
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
-.\ManageOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
+.\ManageOpsCredentials.ps1 -credentialsPath .\CredentialsContainer.json -key $key
 ```
 
 The scripts generates the following content:
@@ -123,33 +123,51 @@ The scripts generates the following content:
 ```
 
 ## Credential container encryption
-The **[EncryptOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/EncryptOpsCredential.ps1)** is used to encrypt the credential container (the JSON file based on the **[BaseCredentialContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialContainer.json)** model):
+The **[EncryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/EncryptOpsCredentials.ps1)** is used to encrypt the credential container (the JSON file based on the **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialsContainer.json)** model).
+
+The script takes three parameters:
+* ***credentialsPath***: the path to target the JSON file which contains the credentials,
+* ***encryptedCredentialsPath***: the path to target the file which will contain the encrypted credentials,
+* ***key***: the encryption key in the base64 format.
+
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
-.\EncryptOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -encryptedCredentialsPath .\CredentialContainer.enc -key $key
+.\EncryptOpsCredentials.ps1 -credentialsPath .\CredentialsContainer.json -encryptedCredentialsPath .\CredentialsContainer.enc -key $key
 ```
 
 ## Credential container decryption
-The **[DecryptOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/DecryptOpsCredential.ps1)** is used to decrypt the encrypted credential container:
+The **[DecryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/DecryptOpsCredentials.ps1)** is used to decrypt the encrypted credential container.
+
+The script takes three parameters:
+* ***encryptedCredentialsPath***: the path to target the file which contains the encrypted credentials,
+* ***credentialsPath***: the path to target the JSON file which will contain the decrypted credentials,
+* ***key***: the encryption key in the base64 format.
+
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
-.\DecryptOpsCredential.ps1 -encryptedCredentialsPath .\CredentialContainer.enc -credentialsPath .\CredentialContainer.json -key $key
+.\DecryptOpsCredentials.ps1 -encryptedCredentialsPath .\CredentialsContainer.enc -credentialsPath .\CredentialsContainer.json -key $key
 ```
 
 ## Next
-To use the credentials in your own scripts, the  **[UseOpsCredential.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/UseOpsCredential.ps1)** can be used (or integrated in your scripts).
+To use the credentials in your own scripts, the  **[UseOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/UseOpsCredentials.ps1)** can be used (or integrated in your scripts).
+
+The script takes two parameters:
+* ***credentialsPath***: the path to target the JSON file which contains the credentials,
+* ***key***: the encryption key in the base64 format.
+
+The credentials are loaded into the variable ***$credentialsContainer***.
 
 Here is a sample to retrieve a credential:
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
-.\UseOpsCredential.ps1 -credentialsPath .\CredentialContainer.json -key $key
+.\UseOpsCredentials.ps1 -credentialsPath .\CredentialsContainer.json -key $key
 
 $credentialName = "credentialB"
 Write-Host "Find the '$credentialName' credential."
-$opsCredential = $credentialContainer.GetCredential($credentialName)
+$opsCredential = $credentialsContainer.GetCredential($credentialName)
 
 if ($opsCredential -ne $null) {
     Write-Host "The '$credentialName' credential exists. Login:$($opsCredential.loginName)" -Foreground Green
@@ -158,5 +176,4 @@ if ($opsCredential -ne $null) {
 }
 
 $pwshCredential = New-Object System.Management.Automation.PSCredential ($opsCredential.loginName, $opsCredential.GetPassword($key))
-
 ```

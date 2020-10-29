@@ -7,13 +7,17 @@ param (
 	[Parameter(HelpMessage="Path of the file to store the key. If not specified, the key is only displayed.")]
 	[string] $outFilePath,
 
-    [Parameter(HelpMessage="Specify whether the key is displayed in the console or not. If the file path is not specified, the key will anyway be displayed.")]
-	[bool] $displayKey = $true
+    [Parameter(HelpMessage="Specifies whether the key is exported into a variable or not.")]
+	[bool] $exportKey = $false,
+
+    [Parameter(HelpMessage="Specifies whether the key is displayed into the console or not. If the file path is not specified or the export is deactivated, the key will anyway be displayed.")]
+	[bool] $displayKey = $false
 )
 
 function GenerateKey (
     [string] $passphrase,
     [string] $outFilePath,
+    [bool] $exportKey,
     [bool] $displayKey
 ) {
     Write-Host "Generate key from a passphrase"
@@ -33,9 +37,14 @@ function GenerateKey (
         Write-Host "The key is stored in the file '$($outFilePath)'" -Foreground Cyan
     }
 
-    if ($displayKey -or [string]::IsNullOrEmpty($outFilePath)) {
+    if ($exportKey) {
+        $global:generatedKey = $generatedKey
+        Write-Host "The key is available in the `$generatedKey variable" -Foreground Gray
+    }
+
+    if ($displayKey -or ([string]::IsNullOrEmpty($outFilePath) -and -not $exportKey)) {
         Write-Host "Key: $base64Key" -Foreground Gray
     }
 }
 
-GenerateKey $passphrase $outFilePath $displayKey
+GenerateKey -passphrase $passphrase -outFilePath $outFilePath -exportKey $exportKey -displayKey $displayKey
