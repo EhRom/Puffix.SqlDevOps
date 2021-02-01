@@ -179,3 +179,5 @@ if ($opsCredential -ne $null) {
 
 $pwshCredential = New-Object System.Management.Automation.PSCredential ($opsCredential.loginName, $opsCredential.GetPassword($key))
 ```
+
+> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
