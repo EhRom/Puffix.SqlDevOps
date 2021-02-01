@@ -8,9 +8,9 @@ Scripts to help the deployement and maintenance of SQL solutions
 > [Deploy](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
 ### Secret management
-* Powershell commands to manage secure strings : [GenerateCredentialsAndSecret.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
-* Powershell commands to create encryption keys for secure strings : [CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md).
-* Powershell commands to manage credenials : [OpsCredential.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredential.md).
+* Powershell commands to manage secure strings : [GenerateCredentialsAndSecret](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
+* Powershell commands to create encryption keys for secure strings : [CreateKey](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md).
+* Powershell commands to manage credenials : [OpsCredential](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredentials.md).
 
 *More to come soon.*
 
