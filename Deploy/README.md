@@ -1,6 +1,6 @@
 # Puffix.SqlDevOps
 
-Scripts to help the deployement and maintenance of SQL solutions.
+Scripts to help the deployement and maintenance of SQL solutions
 
 ## Manage secrets in deployments
 * Powershell commands to manage secure strings : [GenerateCredentialsAndSecret.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
