@@ -8,9 +8,12 @@ Scripts to help the deployement and maintenance of SQL solutions
 > [Deploy](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
 ### Secret management
-* Powershell commands to manage secure strings : [GenerateCredentialsAndSecret](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
-* Powershell commands to create encryption keys for secure strings : [CreateKey](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md).
-* Powershell commands to manage credenials : [OpsCredential](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredentials.md).
+* Powershell commands to manage secure strings: [GenerateCredentialsAndSecret](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
+* Powershell commands to create encryption keys for secure strings: [CreateKey](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md).
+* Powershell commands to manage credenials: [OpsCredential](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredentials.md).
+
+### Win RM
+* Activate WinRM on your servers: : [ActivateWinRM](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ActivateWinRM.md).
 
 *More to come soon.*
 
