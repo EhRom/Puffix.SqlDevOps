@@ -1,5 +1,7 @@
 # Generate credentials and secrets
 
+This page contains a set of commands to deal with SecureString, secrets and key generation and management.
+
 ## Generate a secure string
 
 Generate a **secure string** from a basic string:
@@ -93,3 +95,7 @@ Load the secure string from a file:
 $fileContent = Get-Content securestringwithkey.txt
 $secureString = ConvertTo-SecureString -String $fileContent -Key $key
 ```
+
+> [Next step > manage key](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md)
+
+> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps/Deploy)

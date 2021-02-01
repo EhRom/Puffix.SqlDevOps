@@ -3,7 +3,7 @@
 These scripts are a way to use secured credentials and secrets without the need to store them in your source control.
 
 ## Sample credentials file
-The **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialsContainer.json)** file is a sample which contains some sample credentials:
+The **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/BaseCredentialsContainer.json)** file is a sample which contains some sample credentials:
 ```json
 {
     "credentials": {
@@ -24,11 +24,13 @@ The **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/
 You can create use this sample file to add your own credentials.
 
 ## First level encryption script
-Once done, the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredentials.ps1)** is used to add a first level of encryption of the password. A key file is needed for this script (**[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.md)**).
+Once done, the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/ManageOpsCredentials.ps1)** is used to add a first level of encryption of the password. A key is needed for this script (**[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md)**).
 
 The script is used with the following parameters:
 * ***credentialsPath***: the path to target the JSON file you customized previously,
 * ***key***: the encryption key in the base64 format.
+
+The sample bellow generate a key stored in a file. The file content is read and stored in the *$key* variable:
 
 ```powershell
 $keyPath = "<Path to the key>"
@@ -87,7 +89,7 @@ To change a password or add new credentials, replace the *encryptedPassword* fie
 }
 ```
 
-Execute the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ManageOpsCredentials.ps1)** script another time:
+Execute the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/ManageOpsCredentials.ps1)** script another time:
 ```powershell
 $keyPath = "<Path to the key>"
 $key =  Get-Content $keyPath
@@ -123,7 +125,7 @@ The scripts generates the following content:
 ```
 
 ## Credential container encryption
-The **[EncryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/EncryptOpsCredentials.ps1)** is used to encrypt the credential container (the JSON file based on the **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/BaseCredentialsContainer.json)** model).
+The **[EncryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/EncryptOpsCredentials.ps1)** is used to encrypt the credential container (the JSON file based on the **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/BaseCredentialsContainer.json)** model).
 
 The script takes three parameters:
 * ***credentialsPath***: the path to target the JSON file which contains the credentials,
@@ -137,7 +139,7 @@ $key =  Get-Content $keyPath
 ```
 
 ## Credential container decryption
-The **[DecryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/DecryptOpsCredentials.ps1)** is used to decrypt the encrypted credential container.
+The **[DecryptOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/DecryptOpsCredentials.ps1)** is used to decrypt the encrypted credential container.
 
 The script takes three parameters:
 * ***encryptedCredentialsPath***: the path to target the file which contains the encrypted credentials,
@@ -151,7 +153,7 @@ $key =  Get-Content $keyPath
 ```
 
 ## Next
-To use the credentials in your own scripts, the  **[UseOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/UseOpsCredentials.ps1)** can be used (or integrated in your scripts).
+To use the credentials in your own scripts, the  **[UseOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/UseOpsCredentials.ps1)** can be used (or integrated in your scripts).
 
 The script takes two parameters:
 * ***credentialsPath***: the path to target the JSON file which contains the credentials,
