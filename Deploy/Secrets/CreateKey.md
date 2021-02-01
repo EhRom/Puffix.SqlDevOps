@@ -1,6 +1,6 @@
 # Create key
 
-The **[CreateKey.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/CreateKey.ps1)** script file can be used to generate a basic encryption key. It can be stored in a file as a base 64 string.
+The **[CreateKey.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.ps1)** script file can be used to generate a basic encryption key. It can be stored in a file as a base 64 string.
 
 ## Parameters
 

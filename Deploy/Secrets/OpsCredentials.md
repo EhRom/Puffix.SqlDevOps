@@ -24,7 +24,7 @@ The **[BaseCredentialsContainer.json](https://github.com/EhRom/Puffix.SqlDevOps/
 You can create use this sample file to add your own credentials.
 
 ## First level encryption script
-Once done, the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/ManageOpsCredentials.ps1)** is used to add a first level of encryption of the password. A key is needed for this script (**[CreateKey.md](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md)**).
+Once done, the **[ManageOpsCredentials.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/ManageOpsCredentials.ps1)** is used to add a first level of encryption of the password. A key is needed for this script (**[CreateKey](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md)**).
 
 The script is used with the following parameters:
 * ***credentialsPath***: the path to target the JSON file you customized previously,
