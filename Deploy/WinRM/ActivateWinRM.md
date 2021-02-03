@@ -15,6 +15,12 @@ netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=
 ```
 > You may have to translate the rule group name in the OS language. For example, in french, you should use "Partage de fichiers et d'imprimantes".
 
+You may need to list the rules by your own:
+```
+netsh advfirewall monitor show firewall rule name=all
+```
+Or activate the rules manually in the firewall advanced view.
+
 On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script, and run the command:
 ```
 ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https
@@ -24,7 +30,6 @@ If the machine is also part of an high availibility group (Always ON), run also 
 ```
 ConfigureWinRM.ps1 <sqlalwaysonlistener.mydomain.local> https
 ```
-
 
 More information available on [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-iis-winrm?view=azure-devops#winrm-configuration).
 
