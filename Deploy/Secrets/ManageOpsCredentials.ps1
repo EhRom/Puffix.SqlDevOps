@@ -54,7 +54,7 @@ Class OpsCredential {
 	}
 
     [void] SetPassword([string] $clearPassword, [string] $base64Key) {
-        if([string]::IsNullOrEmpty($this.base64Key)) {
+        if([string]::IsNullOrEmpty($base64Key)) {
             $securePassword = ConvertTo-SecureString -String $clearPassword -AsPlainText -Force
             $this.encryptedPassword = ConvertFrom-SecureString -SecureString $securePassword
         } else {
@@ -71,7 +71,7 @@ Class OpsCredential {
     [SecureString] GetPassword([string] $base64Key) {
         [SecureString] $secureString = $null
 
-        if([string]::IsNullOrEmpty($this.base64Key)) {
+        if([string]::IsNullOrEmpty($base64Key)) {
             $secureString = ConvertTo-SecureString -String $this.encryptedPassword
         } else {
             $key = $this.ExtractKey($base64Key)
