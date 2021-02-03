@@ -58,8 +58,8 @@ Class OpsCredential {
             $securePassword = ConvertTo-SecureString -String $clearPassword -AsPlainText -Force
             $this.encryptedPassword = ConvertFrom-SecureString -SecureString $securePassword
         } else {
-            $key = $this.ExtractKey($base64Key)
-            $securePassword = ConvertTo-SecureString -String $clearPassword -Key $key -AsPlainText -Force
+            [byte[]] $key = [System.Convert]::FromBase64String($base64Key)
+            $securePassword = ConvertTo-SecureString -String $clearPassword -AsPlainText -Force
             $this.encryptedPassword = ConvertFrom-SecureString -SecureString $securePassword -Key $key
         }
     }
@@ -74,7 +74,7 @@ Class OpsCredential {
         if([string]::IsNullOrEmpty($base64Key)) {
             $secureString = ConvertTo-SecureString -String $this.encryptedPassword
         } else {
-            $key = $this.ExtractKey($base64Key)
+            [byte[]] $key = [System.Convert]::FromBase64String($base64Key)
             $secureString = ConvertTo-SecureString -String $this.encryptedPassword -Key $key
         }
 
@@ -86,10 +86,6 @@ Class OpsCredential {
 
         $clearPassword = [System.Net.NetworkCredential]::new('', $secureString).Password
         return $clearPassword
-    }
-
-    hidden static [byte[]] ExtractKey([string] $base64Key) {
-        return [System.Convert]::FromBase64String($base64Key)
     }
 }
 

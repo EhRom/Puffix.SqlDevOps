@@ -16,7 +16,7 @@ Class OpsCredentialsContainer {
 	[System.Collections.Generic.Dictionary[string, OpsCredential]] $credentials
 
 	OpsCredentialsContainer() {
-        $this.credentials = New-Object "System.Collections.Generic.Dictionary[string, OpsCredential]"
+		$this.credentials = New-Object "System.Collections.Generic.Dictionary[string, OpsCredential]"
         $this.isModified = $false
 	}
 
@@ -54,12 +54,12 @@ Class OpsCredential {
 	}
 
     [void] SetPassword([string] $clearPassword, [string] $base64Key) {
-        if([string]::IsNullOrEmpty($this.base64Key)) {
+        if([string]::IsNullOrEmpty($base64Key)) {
             $securePassword = ConvertTo-SecureString -String $clearPassword -AsPlainText -Force
             $this.encryptedPassword = ConvertFrom-SecureString -SecureString $securePassword
         } else {
-            $key = $this.ExtractKey($base64Key)
-            $securePassword = ConvertTo-SecureString -String $clearPassword -Key $key -AsPlainText -Force
+            [byte[]] $key = [System.Convert]::FromBase64String($base64Key)
+            $securePassword = ConvertTo-SecureString -String $clearPassword -AsPlainText -Force
             $this.encryptedPassword = ConvertFrom-SecureString -SecureString $securePassword -Key $key
         }
     }
@@ -71,10 +71,10 @@ Class OpsCredential {
     [SecureString] GetPassword([string] $base64Key) {
         [SecureString] $secureString = $null
 
-        if([string]::IsNullOrEmpty($this.base64Key)) {
+        if([string]::IsNullOrEmpty($base64Key)) {
             $secureString = ConvertTo-SecureString -String $this.encryptedPassword
         } else {
-            $key = $this.ExtractKey($base64Key)
+            [byte[]] $key = [System.Convert]::FromBase64String($base64Key)
             $secureString = ConvertTo-SecureString -String $this.encryptedPassword -Key $key
         }
 
@@ -86,10 +86,6 @@ Class OpsCredential {
 
         $clearPassword = [System.Net.NetworkCredential]::new('', $secureString).Password
         return $clearPassword
-    }
-
-    hidden static [byte[]] ExtractKey([string] $base64Key) {
-        return [System.Convert]::FromBase64String($base64Key)
     }
 }
 
