@@ -7,15 +7,14 @@ Scripts to help the deployement and maintenance of SQL solutions.
 Scripts to help the deployement and maintenance of SQL solutions
 > [Deploy](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
-### Secret management
-* Powershell commands to manage secure strings: [GenerateCredentialsAndSecret](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
-* Powershell commands to create encryption keys for secure strings: [CreateKey](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md).
-* Powershell commands to manage credenials: [OpsCredential](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredentials.md).
+It covers the following topics:
+1. SQL Database deployement
+1. SSIS packages and configuration
+1. SQL Agent Jobs
+1. Secret management for secure deployment
+1. WinRM activation
 
-### Win RM
-* Activate WinRM on your servers: : [ActivateWinRM](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ActivateWinRM.md).
-
-*More to come soon.*
+A sample solution is also available to illustrate the concepts.
 
 ## Maintenance
 Some scripts to diagnose performances issues and maintain databases:
