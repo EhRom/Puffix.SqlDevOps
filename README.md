@@ -5,7 +5,6 @@ Scripts to help the deployement and maintenance of SQL solutions.
 ## Deploy
 
 Scripts to help the deployement and maintenance of SQL solutions
-> [Deploy](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
 It covers the following topics:
 1. SQL Database deployement
@@ -15,6 +14,8 @@ It covers the following topics:
 1. WinRM activation
 
 A sample solution is also available to illustrate the concepts.
+
+> More information: [Deploy](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
 ## Maintenance
 Some scripts to diagnose performances issues and maintain databases:
