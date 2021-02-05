@@ -1,0 +1,6 @@
+[General]
+Version=<Version number>
+CredentialsPathPattern=..\{0}\credentials-{0}.enc
+
+[SQLJobs]
+SqlJobsConfigurationPathPattern=..\{0}\sqljobs-{0}.json

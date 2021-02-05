@@ -20,10 +20,10 @@ SQL Database are deployed through [DACPAC packages](https://docs.microsoft.com/e
 
 With Azure Dev Ops, it is advised to use the [SQL Server database deploy](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/SqlDacpacDeploymentOnMachineGroupV0/README.md) task. You can also write your own script using [SqlPackage.exe utility](https://docs.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage?view=sql-server-ver15).
 
-## Deploy SSIS pacakge
+## Deploy SSIS packages and configuration
 *More to come soon.*
 
-## Deploy SQL Agent Jobs pacakge
+## Deploy SQL Agent Jobs
 *More to come soon.*
 
 

@@ -1,0 +1,20 @@
+[General]
+Version=<Version number>
+CredentialsPathPattern=..\{0}\credentials-{0}.enc
+
+[SSIS]
+SsisCatalogName=<Catalog SSIS name e.g. SSISDB>
+SsisCatalogPassword=<SSIS Catalog Password or name to the credentials to use>
+SsisPackageConfigurationPathPattern=..\{0}\ssisenvironment-{0}.json
+
+[SSIS>ODS]
+SsisOdsFolderName=<SSIS folder name for packages>
+SsisOdsPackagePath=<Path to the ispac file>
+SsisOdsProjectName=<ProjectName>
+SsisOdsEnvironmentNames=<EnvironmentNames>
+
+[SSIS>Datamart]
+SsisDatamartFolderName=<SSIS folder name for packages>
+SsisDatamartPackagePath=<Path to the ispac file>
+SsisDatamartProjectName=<ProjectName>
+SsisDatamartEnvironmentNames=<EnvironmentNames>
