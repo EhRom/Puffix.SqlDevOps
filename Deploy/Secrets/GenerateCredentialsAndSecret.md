@@ -96,7 +96,9 @@ $fileContent = Get-Content securestringwithkey.txt
 $secureString = ConvertTo-SecureString -String $fileContent -Key $key
 ```
 
-> [Next step > manage key](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md)
+[Next step > manage key](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/CreateKey.md)
 
-> [Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
-> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
+
+[Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
+
+[Back to root](https://github.com/EhRom/Puffix.SqlDevOps)

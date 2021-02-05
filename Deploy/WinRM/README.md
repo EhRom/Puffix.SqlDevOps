@@ -33,5 +33,6 @@ ConfigureWinRM.ps1 <sqlalwaysonlistener.mydomain.local> https
 
 More information available on [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-iis-winrm?view=azure-devops#winrm-configuration).
 
-> [Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
-> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
+[Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
+
+[Back to root](https://github.com/EhRom/Puffix.SqlDevOps)

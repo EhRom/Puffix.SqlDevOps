@@ -29,4 +29,4 @@ To deploy SQL Agent jobs, Powershell scripts and Text and JSON configuration fil
 ## Sample solution
 *More to come soon.*
 
-> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
+[Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
