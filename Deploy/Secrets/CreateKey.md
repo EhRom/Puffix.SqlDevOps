@@ -52,4 +52,5 @@ Write-Host "Generated key > $($generatedKey)"
 
 > [Next step > manage credentials in deployements](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/OpsCredentials.md)
 
-> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
+> [Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
+> [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)

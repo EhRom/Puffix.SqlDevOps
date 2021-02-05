@@ -8,7 +8,7 @@ The solution as been tested on Azure Dev Ops and target multiple versions of SQL
 You are free to tests these scripts and customize them to target other CI / CD solutions and systems.
 
 ## WinRM
-* Activate WinRM on your servers: : [ActivateWinRM](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ActivateWinRM.md).
+* Activate WinRM on your servers: : [ActivateWinRM](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM).
 
 ## Manage secrets in deployments
 * Powershell sample commands to manage secure strings : [GenerateCredentialsAndSecret](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/Secrets/GenerateCredentialsAndSecret.md).
@@ -28,6 +28,5 @@ To deploy SQL Agent jobs, Powershell scripts and Text and JSON configuration fil
 
 ## Sample solution
 *More to come soon.*
-
 
 > [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
