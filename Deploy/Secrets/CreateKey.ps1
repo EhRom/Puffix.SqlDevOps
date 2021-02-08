@@ -38,7 +38,7 @@ function GenerateKey (
     }
 
     if ($exportKey) {
-        $global:generatedKey = $generatedKey
+        $global:generatedKey = $base64Key
         Write-Host "The key is available in the `$generatedKey variable" -Foreground Gray
     }
 
