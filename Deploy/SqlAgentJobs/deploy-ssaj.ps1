@@ -17,8 +17,22 @@ If (-not (Test-Path $settingsFile))
 }
 
 ###########################################################################
+# LOAD SQL SERVER POWERSHELL MODULE
+###########################################################################
+Write-Output "Test if SqlServer PowerShell module is installed"
+Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
+
+if (-not (Get-Module -ListAvailable -Name SqlServer)) {
+	Write-Output "Install the PowerShell module"
+	Install-Module SqlServer -Scope CurrentUser -Force -AllowClobber
+}
+
+Write-Output "Import the SqlServer PowerShell module"
+Import-Module SqlServer
+
+###########################################################################
 # READ PARAMETERS
-###########################################################################            
+###########################################################################
 Write-Output "Load settings file. File : $settingsFile"
 
 Get-Content $settingsFile | `
