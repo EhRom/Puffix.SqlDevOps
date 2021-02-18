@@ -31,6 +31,8 @@ Class SqlJobDefinition {
 	[System.Collections.Generic.List[SqlStepJobDefinition]] $steps
 	[System.Collections.Generic.List[SqlScheduleJobDefinition]] $schedules
 	[bool] $enabled
+	[string] $operatorToMail
+	[NotificationLevel] $mailNotificationLevel
 	
 	SqlJobDefinition([string] $name, [string] $ownerLoginName, [string] $targetServerName, [bool] $enabled) {
 		$this.name = $name
@@ -39,7 +41,32 @@ Class SqlJobDefinition {
 		$this.steps = New-Object "System.Collections.Generic.List[SqlStepJobDefinition]"
 		$this.schedules = New-Object "System.Collections.Generic.List[SqlScheduleJobDefinition]"
 		$this.enabled = $enabled
+
+		$this.mailNotificationLevel = [NotificationLevel]::Nothing
 	}
+
+	[Microsoft.SqlServer.Management.Smo.Agent.CompletionAction] GetMailNotificationLevelValue() {
+		
+		if ([NotificationLevel]::JobSuccess -eq $this.mailNotificationLevel) {
+			$completionAction = [Microsoft.SqlServer.Management.Smo.Agent.CompletionAction]::OnSuccess
+		} elseif ([NotificationLevel]::JobFailure -eq $this.mailNotificationLevel) {
+			$completionAction = [Microsoft.SqlServer.Management.Smo.Agent.CompletionAction]::OnFailure
+		} elseif ([NotificationLevel]::JobCompletion -eq $this.mailNotificationLevel) {
+			$completionAction = [Microsoft.SqlServer.Management.Smo.Agent.CompletionAction]::Always
+		} else {
+			$completionAction = [Microsoft.SqlServer.Management.Smo.Agent.CompletionAction]::Never
+		}
+
+		return $completionAction
+	}
+}
+
+# Notification level enumeration
+Enum NotificationLevel {
+	Nothing = 0
+	JobSuccess = 1
+	JobFailure = 2
+	JobCompletion = 3
 }
 
 # SQL Agent job step definition.
@@ -88,8 +115,7 @@ Class SqlStepJobDefinition {
 		$sqlJobStep.Command=$sqlJobStepCommand
 		$sqlJobStep.DatabaseName = $this.databasename
 		
-		if(-Not([String]::IsNullOrEmpty($this.ssisProxyName)))
-		{
+		if(-Not([String]::IsNullOrEmpty($this.ssisProxyName))) {
 			$sqlJobStep.ProxyName = $this.ssisProxyName
 		}
 
@@ -142,12 +168,12 @@ Class SqlSsisStepJobDefinition : SqlStepJobDefinition {
 		$this.sqlJobStepSubSystem = [Microsoft.SqlServer.Management.Smo.Agent.AgentSubSystem]::SSIS
 	}
 
-	[void] CreateStep([string] $dbServerName, [Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob)
-	{
+	[void] CreateStep([string] $dbServerName, [Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		# Get the target server name.
 		if([System.String]::IsNullOrEmpty($this.targetServerName)) {
 			$targetServerName = $dbServerName
-		} else {
+		}
+		else {
 			$targetServerName = $this.targetServerName
 		}
 
@@ -163,8 +189,7 @@ Class SqlSsisStepJobDefinition : SqlStepJobDefinition {
 	}
 
 	# Get the reference Id to the environment in the SSIS project.
-	[string] BuildCommand([string] $targetServerName)
-	{
+	[string] BuildCommand([string] $targetServerName) {
 		# Get reference to the environment
 		Write-Host "Get the reference to the environment configuration"
 
@@ -262,12 +287,12 @@ Class SqlTSqlStepJobDefinition : SqlStepJobDefinition {
 		$this.sqlJobStepSubSystem = [Microsoft.SqlServer.Management.Smo.Agent.AgentSubSystem]::TransactSql
 	}
 
-	[void] CreateStep([string] $dbServerName, [Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob)
-	{
+	[void] CreateStep([string] $dbServerName, [Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		# Get the target server name.
 		if([System.String]::IsNullOrEmpty($this.targetServerName)) {
 			$targetServerName = $dbServerName
-		} else {
+		}
+		else {
 			$targetServerName = $this.targetServerName
 		}
 
@@ -291,16 +316,14 @@ Class SqlScheduleJobDefinition {
 		$this.enabled = $enabled
 	}
 
-	[Microsoft.SqlServer.Management.Smo.Agent.JobSchedule] BaseInitSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob)
-	{
+	[Microsoft.SqlServer.Management.Smo.Agent.JobSchedule] BaseInitSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		$sqlJobSchedule = New-Object Microsoft.SqlServer.Management.Smo.Agent.JobSchedule($sqlJob, $this.name)
 		$sqlJobSchedule.IsEnabled = $this.enabled
 
 		return $sqlJobSchedule
 	}
 
-	[void] BaseCreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.JobSchedule] $sqlJobSchedule)
-	{
+	[void] BaseCreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.JobSchedule] $sqlJobSchedule) {
 		$sqlJobSchedule.Create()
 	}
 }
@@ -327,8 +350,7 @@ Class SqlRecurringScheduleJobDefinition : SqlScheduleJobDefinition {
 		: base($name, $enabled) {
 	}
 
-	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) 
-	{
+	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		################################################################
 		# Create SSIS Schedule
 		################################################################
@@ -395,8 +417,7 @@ Class SqlRecurringScheduleJobDefinition : SqlScheduleJobDefinition {
 		$this.BaseCreateSchedule($sqlJobSchedule)
 	}
 
-	[int] ExtractDayOccurenceInMonth()
-	{
+	[int] ExtractDayOccurenceInMonth() {
 		$result = 1
 		if($this.dayOccurenceInMonth -eq "First") {
 			$result = 1
@@ -417,8 +438,7 @@ Class SqlRecurringScheduleJobDefinition : SqlScheduleJobDefinition {
 		return $result
 	}
 
-	[int] ExtractWeekDay()
-	{
+	[int] ExtractWeekDay() {
 		$result = 1
 		
 		if($this.weekDay -eq "Sunday") {
@@ -455,8 +475,7 @@ Class SqlRecurringScheduleJobDefinition : SqlScheduleJobDefinition {
 		return $result
 	}
 
-	[int] ExtractWeekDays()
-	{
+	[int] ExtractWeekDays() {
 		$result = 0
 		if ([string]::IsNullOrEmpty($this.weekDays)){
 			$result = [int][WeekDays]::EveryDay
@@ -550,8 +569,7 @@ Class SqlOneTimeScheduleJobDefinition : SqlScheduleJobDefinition {
 		: base($name, $enabled) {
 	}
 
-	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) 
-	{
+	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		################################################################
 		# Create SSIS Schedule
 		################################################################
@@ -561,11 +579,9 @@ Class SqlOneTimeScheduleJobDefinition : SqlScheduleJobDefinition {
 		$sqlJobSchedule.FrequencyTypes = [Microsoft.SqlServer.Management.Smo.Agent.FrequencyTypes]::OneTime
 
 		if(!$this.scheduledDateTime -or $this.scheduledDateTime  -lt [DateTime]::Now) {
-			$thisscheduledDateTime = $this.scheduledDateTime
-			Write-Host "ScheduledDateTime is not valid : $thisscheduledDateTime. The schedule is past" -ForegroundColor Yellow
+			Write-Host "ScheduledDateTime is not valid : $($this.scheduledDateTime). The schedule is past" -ForegroundColor Yellow
 		}
-		else
-		{
+		else {
 			$sqlJobSchedule.ActiveStartDate = $this.scheduledDateTime.Date
 			$sqlJobSchedule.ActiveStartTimeOfDay = $this.scheduledDateTime.TimeOfDay
 		}
@@ -585,8 +601,7 @@ Class SqlAgentStartsScheduleJobDefinition : SqlScheduleJobDefinition {
 		: base($name, $enabled) {
 	}
 
-	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) 
-	{
+	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		################################################################
 		# Create SSIS Schedule
 		################################################################
@@ -610,8 +625,7 @@ Class SqlIdleCPUScheduleJobDefinition : SqlScheduleJobDefinition {
 		: base($name, $enabled) {
 	}
 
-	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) 
-	{
+	[void] CreateSchedule([Microsoft.SqlServer.Management.Smo.Agent.Job] $sqlJob) {
 		################################################################
 		# Create SSIS Schedule
 		################################################################
@@ -629,11 +643,9 @@ Class SqlIdleCPUScheduleJobDefinition : SqlScheduleJobDefinition {
 function SplitServerNames([string] $serverNames) {
 	[System.Collections.Generic.List[string]] $serverNameCollection = New-Object "System.Collections.Generic.List[string]"
 	
-	if(![string]::IsNullOrEmpty($serverNames))
-	{
+	if(![string]::IsNullOrEmpty($serverNames)) {
 		$splittedServerNames = $serverNames.Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)
-		foreach($splittedServerName in $splittedServerNames)
-		{
+		foreach($splittedServerName in $splittedServerNames) {
 			$serverNameCollection.Add($splittedServerName.Trim())
 		}
 	}
@@ -644,25 +656,30 @@ function SplitServerNames([string] $serverNames) {
 # Load SQL Job definitions from JSON file.
 function LoadConfiguration(
 	[string] $filePath
-)
-{
+) {
 	Write-Host "Load configuration from $filePath" -ForegroundColor Cyan
 	$coreConfig = (Get-Content $filePath | Out-String | ConvertFrom-Json)
 	
 	$config = New-Object SqlJobDefinitionCollection
 	
-	foreach($coreJob in $coreConfig.jobs)
-	{
+	foreach($coreJob in $coreConfig.jobs) {
 		$enabled = $false
 
-		if(Get-Member -inputobject $coreJob -name "enabled" -Membertype Properties)  {
+		if(Get-Member -inputobject $coreJob -name "enabled" -Membertype Properties) {
 			$enabled = [bool]$coreJob.enabled
 		}
 
 		$job = New-Object SqlJobDefinition ($coreJob.name, $coreJob.ownerLoginName, $coreJob.targetServerName, $enabled)
 
-		foreach($coreStep in $coreJob.steps)
-		{
+		# Extract mail notification information
+		if((Get-Member -inputobject $coreJob -name "operatorToMail" -Membertype Properties) -And `
+				(Get-Member -inputobject $coreJob -name "mailNotificationLevel" -Membertype Properties) -And `
+				$coreJob.mailNotificationLevel -ne 0) {
+			$job.operatorToMail = $coreJob.operatorToMail
+			$job.mailNotificationLevel = [NotificationLevel]$coreJob.mailNotificationLevel
+		}
+
+		foreach($coreStep in $coreJob.steps) {
 			# Extract actions.
 			if(Get-Member -inputobject $coreStep -name "onSuccessAction" -Membertype Properties) { 
 				$onSuccessAction = [StepCompletionAction]$coreStep.onSuccessAction
@@ -671,6 +688,7 @@ function LoadConfiguration(
 				Write-Host "No onSuccessAction member found" -ForegroundColor Gray
 				$onSuccessAction = [StepCompletionAction]::GoToNextStep
 			}
+
 			if(Get-Member -inputobject $coreStep -name "onFailAction" -Membertype Properties) {
 				$onFailAction = [StepCompletionAction]$coreStep.onFailAction
 			}
@@ -680,8 +698,7 @@ function LoadConfiguration(
 			}
 
 			# Create step definition.
-			if ($coreStep.type -eq "SSIS")
-			{
+			if ($coreStep.type -eq "SSIS") {
 				$step = New-Object SqlSsisStepJobDefinition($coreStep.name, $coreStep.targetServerName, $coreStep.databasename, [int]$onSuccessAction, [int]$onFailAction)
 				$step.ssisCatalogName = $coreStep.ssisCatalogName
 				$step.ssisFolderName = $coreStep.ssisFolderName
@@ -689,14 +706,12 @@ function LoadConfiguration(
 				$step.ssisPackageName = $coreStep.ssisPackageName
 				$step.ssisEnvironmentName = $coreStep.ssisEnvironmentName
 			}
-			elseif ($coreStep.type -eq "TSQL")
-			{
+			elseif ($coreStep.type -eq "TSQL") {
 				$step = New-Object SqlTSqlStepJobDefinition ($coreStep.name, $coreStep.targetServerName, $coreStep.databasename, [int]$onSuccessAction, [int]$onFailAction)
 				$step.command = $coreStep.command
 			}
 			
-			if(-Not([String]::IsNullOrEmpty($coreStep.ssisProxyName)))
-			{
+			if(-Not([String]::IsNullOrEmpty($coreStep.ssisProxyName))) {
 				$step.ssisProxyName = $coreStep.ssisProxyName
 			}
 
@@ -714,8 +729,7 @@ function LoadConfiguration(
 			}
 		}
 		
-		foreach($coreSchedule in $coreJob.schedules)
-		{
+		foreach($coreSchedule in $coreJob.schedules) {
 			#Extract typed information
 			if(Get-Member -inputobject $coreSchedule -name "enabled" -Membertype Properties) { 
 				if([string]::Equals($coreSchedule.enabled, "true", [StringComparison]::OrdinalIgnoreCase)) {
@@ -731,8 +745,7 @@ function LoadConfiguration(
 			}
 
 			# Create schedule definition.
-			if ($coreSchedule.type -eq "Recurring")
-			{
+			if ($coreSchedule.type -eq "Recurring") {
 				$schedule = New-Object SqlRecurringScheduleJobDefinition($coreSchedule.name, [bool]$scheduleEnabled)
 				
 				if(Get-Member -inputobject $coreSchedule -name "frequency" -Membertype Properties) { 
@@ -811,8 +824,7 @@ function LoadConfiguration(
 						$schedule.subDayInterval = [int]$coreSchedule.subDayInterval
 				}
 			}
-			elseif ($coreSchedule.type -eq "OneTime")
-			{
+			elseif ($coreSchedule.type -eq "OneTime") {
 				$schedule = New-Object SqlOneTimeScheduleJobDefinition($coreSchedule.name, [bool]$scheduleEnabled)
 
 				if(Get-Member -inputobject $coreSchedule -name "scheduledDateTime" -Membertype Properties) { 
@@ -828,12 +840,10 @@ function LoadConfiguration(
 					Write-Host "No scheduledDateTime member found." -ForegroundColor Gray
 				}
 			}
-			elseif ($coreSchedule.type -eq "AgentStarts")
-			{
+			elseif ($coreSchedule.type -eq "AgentStarts") {
 				$schedule = New-Object SqlAgentStartsScheduleJobDefinition($coreSchedule.name, [bool]$scheduleEnabled)
 			}
-			elseif ($coreSchedule.type -eq "IdleCPU")
-			{
+			elseif ($coreSchedule.type -eq "IdleCPU") {
 				$schedule = New-Object SqlIdleCPUScheduleJobDefinition($coreSchedule.name, [bool]$scheduleEnabled)
 			}
 
@@ -855,8 +865,7 @@ function LoadConfiguration(
 function DeployJobs(
 	[string] $dbServerName,
 	[string] $sqlJobsConfigurationPath
-)
-{
+) {
 	################################################################
 	# Load configuration
 	################################################################
@@ -876,8 +885,7 @@ function DeployJobs(
     ################################################################
 	# Create the jobs
 	################################################################
-	foreach($sqlJobConfiguration in $sqlJobsConfiguration.jobs)
-	{
+	foreach($sqlJobConfiguration in $sqlJobsConfiguration.jobs) {
 		$sqlJobName = $sqlJobConfiguration.name
 		$sqlJobOwnerLoginName = $sqlJobConfiguration.ownerLoginName
 		$enabled = $sqlJobConfiguration.enabled
@@ -885,8 +893,7 @@ function DeployJobs(
 
 		Try {
 			$sqlJob=$dbServer.Jobserver.Jobs|where-object {$_.Name -like $sqlJobName}
-			if (!$sqlJob)
-			{
+			if (!$sqlJob) {
 				Write-Host "The job $sqlJobName does not exists. Create the job."
 	
 				$sqlJob = New-Object Microsoft.SqlServer.Management.Smo.Agent.Job($dbServer.JobServer, $sqlJobName)
@@ -898,14 +905,30 @@ function DeployJobs(
 					$targetServerName = $dbServerName
 				}
 
+				if(-Not([System.String]::IsNullOrEmpty($sqlJobConfiguration.operatorToMail)) -And [NotificationLevel]::Nothing -ne $sqlJobConfiguration.mailNotificationLevel) {
+					Write-Host "Check if $($sqlJobConfiguration.operatorToMail) operator exists" -ForegroundColor Gray
+					if ($dbServer.JobServer.Operators.Contains($sqlJobConfiguration.operatorToMail)) {
+						$sqlOperator = 	$dbServer.JobServer.Operators[$sqlJobConfiguration.operatorToMail]
+
+						Write-Host "Test operator $($sqlOperator.Name) > $($sqlOperator.State) / $($sqlOperator.EmailAddress)" -Foreground Magenta
+
+						$sqlJob.OperatorToEmail = $sqlOperator.Name
+						$sqlJob.EmailLevel = $sqlJobConfiguration.GetMailNotificationLevelValue()
+
+					} else {
+						Throw "The operator $($sqlJobConfiguration.operatorToMail) does not exists. The job $($sqlJobConfiguration.name) is not created"
+					}
+
+					Write-Host "Added operator $($sqlJob.OperatorToEmail) with level $($sqlJob.EmailLevel)" -Foreground Green
+				}
+				
 				if(-Not([System.String]::IsNullOrEmpty($sqlJobOwnerLoginName))) {
 					$sqlJob.OwnerLoginName = $sqlJobOwnerLoginName
 				}
-
+				
 				Write-Host "The job is created. Owner: $($sqlJob.OwnerLoginName) (previous: $($previousOwnerLoginName)). Add steps"
 
-				foreach ($sqlJobStepConfiguration in $sqlJobConfiguration.steps)
-				{
+				foreach ($sqlJobStepConfiguration in $sqlJobConfiguration.steps) {
 					$sqlJobStepName = $sqlJobStepConfiguration.name
 					$sqlJobStepType =  $sqlJobStepConfiguration.type
 
@@ -915,8 +938,7 @@ function DeployJobs(
 				}
 
 				Write-Host "Steps are created. Add schedules"
-				foreach ($sqlJobScheduleConfiguration in $sqlJobConfiguration.schedules)
-				{
+				foreach ($sqlJobScheduleConfiguration in $sqlJobConfiguration.schedules) {
 					$sqlJobScheduleName = $sqlJobScheduleConfiguration.name
 					$sqlJobScheduleType =  $sqlJobScheduleConfiguration.type
 
@@ -935,8 +957,7 @@ function DeployJobs(
 
 				Write-Host "The job $sqlJobName is created" -ForegroundColor Green
 			}
-			else
-			{
+			else {
 				Write-Host "The job $sqlJobName already exists" -ForegroundColor Yellow
 			}
 		}
@@ -956,8 +977,7 @@ function DeployJobs(
 function DropJobs(
 	[string] $dbServerName,
 	[string] $sqlJobsConfigurationPath
-)
-{
+) {
 	################################################################
 	# Load configuration
 	################################################################
@@ -977,8 +997,7 @@ function DropJobs(
     ################################################################
 	# Drop the jobs
 	################################################################
-	foreach($sqlJobConfiguration in $sqlJobsConfiguration.jobs)
-	{
+	foreach($sqlJobConfiguration in $sqlJobsConfiguration.jobs) {
 		$sqlJobName = $sqlJobConfiguration.name
 		Write-Host "Drop the job $sqlJobName"
 
@@ -989,8 +1008,7 @@ function DropJobs(
 				$sqlJob.DropIfExists()
 				Write-Host "The job $sqlJobName is dropped" -ForegroundColor Green
 			}
-			else
-			{
+			else {
 				Write-Host "The job $sqlJobName is already dropped" -ForegroundColor Yellow
 			}
 		}
@@ -1008,10 +1026,8 @@ function DropJobs(
 $sqlJobsServerCollection = SplitServerNames $sqlJobsServerList
 
 # Execute
-if($deployJobs)
-{
-	foreach($sqlJobsServerName in $sqlJobsServerCollection)
-	{
+if($deployJobs) {
+	foreach($sqlJobsServerName in $sqlJobsServerCollection) {
 		Write-Host "Deploy jobs on server '$($sqlJobsServerName)'." -ForegroundColor Cyan
 
 		DeployJobs $sqlJobsServerName $sqlJobsConfigurationPath
@@ -1019,8 +1035,7 @@ if($deployJobs)
 }
 else
 {
-	foreach($sqlJobsServerName in $sqlJobsServerCollection)
-	{
+	foreach($sqlJobsServerName in $sqlJobsServerCollection) {
 		Write-Host "Undeploy jobs on server '$($sqlJobsServerName)'" -ForegroundColor Cyan
 		DropJobs $sqlJobsServerName $sqlJobsConfigurationPath
 	}
@@ -1032,6 +1047,8 @@ else
 #    {
 #      "name": "Alter Sample Job",
 #      "ownerLoginName": "doe\svc_john",
+#      "operatorToMail": "notifyMailOperator",
+#      "mailNotificationLevel": 1,
 #      "steps": [
 #        {
 #          "type": "TSQL",
