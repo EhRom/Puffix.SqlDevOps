@@ -1,4 +1,4 @@
-# Azure Point-To-Site VPN creation
+# Azure Point-To-Site VPN setup and configuration
 
 An **Azure Point-to-Site (P2S)** VPN is a link between your local computer and a **Network Gateway** in Azure. The gateway is linked to a private network (**Virtual Network**) in Azure.
 
@@ -37,4 +37,8 @@ $childCertificateFileName = "AzureP2S$($baseName)_$($childCertificateName).cer"
 .\CreateChildCertificate.ps1 -baseName $baseName -childName $childCertificateName -rootCertificateThumbprint $rootCertificateThumbprint -childCertificateFilePath .\$childCertificateFileName
 ```
 
-*More to come soon (import certificate in root certification authorities | export pfx | delete certificate)*
+*More to come soon (import certificate in root certification authorities | export pfx | delete certificate | base 64 conversion)*
+
+[Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
+
+[Back to root](https://github.com/EhRom/Puffix.SqlDevOps)

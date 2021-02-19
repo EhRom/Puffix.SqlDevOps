@@ -26,7 +26,13 @@ To deploy SSIS packages and configuration, Powershell scripts and Text and JSON 
 ## Deploy SQL Agent Jobs
 To deploy SQL Agent jobs, Powershell scripts and Text and JSON configuration files are used. More information: [Deploy SQL Agent Jobs](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/SqlAgentJobs) 
 
-## Sample solution
+## Sample BI solution
 *More to come soon.*
+
+## Azure P2S VPN & certificates
+Azure P2S VPN are used to connect your local machine to a Private Virtual Network in Azure. These networks can be used to host virtual machines, Azure SQL Databases and mode. To setup an Azure P2S VPN, certificates are required.
+
+Set up an Azure P2S VPN foolowing and manage self-signed certificates to achieve the VPN setup: [Azure Point-To-Site VPN setup and configuration](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy/AzureP2S%26Certificates)
+
 
 [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
