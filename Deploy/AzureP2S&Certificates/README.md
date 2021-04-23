@@ -26,7 +26,7 @@ $rootCertificateFileName = "AzureP2S$($baseName)Root.cer"
 
 ### Generate child certifcate
 ```powershell
-.\CreateChildCertificate.ps1 -baseName "<base certificate name>" -childName "<child certificate name>" -rootCertificateSerialNumber "<root certificate serial number>" -childCertificateFilePath .\<child certificate file name>.cer -export $true(default)|$false
+.\CreateChildCertificate.ps1 -baseName "<base certificate name>" -childName "<child certificate name>" -rootCertificateThumbprint "<root certificate thumbrpint>" -childCertificateFilePath .\<child certificate file name>.cer -export $true(default)|$false
 ```
 
 Sample (assume the previous sample is executed):
