@@ -4,7 +4,7 @@ The scripts used to deploy the SSIS packages and environments and the SQL Agent 
 
 To activate WinRM, you need to execute on each target machine (which runs SQL Server) the following commmands (in a PowerShell console, **as administrator**).
 
-## Chech PowerShell verion
+## Check PowerShell verion
 
 WinRM requires PowerShell version 4.0 and above. To control the version, use the following command:
 ```
