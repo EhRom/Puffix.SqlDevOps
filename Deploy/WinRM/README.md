@@ -1,6 +1,6 @@
 # Activate WinRM
 
-The scripts used to deploy the SSIS pacakges and environments and the SQL Agent jobs require to be executed on the target machine. Indeed, the scrips requires librairies which are not always available on Azure Dev Ops deployement agent but are required on the target machine (which embed SQL Server).
+The scripts used to deploy the SSIS packages and environments and the SQL Agent jobs require to be executed on the target machine. Indeed, the scrips requires librairies which are not always available on Azure Dev Ops deployement agent but are required on the target machine (which embed SQL Server).
 
 To activate WinRM, you need to execute on each target machine (which runs SQL Server) the following commmands (in a PowerShell console, **as administrator**).
 
