@@ -28,12 +28,12 @@ Or activate the rules manually in the firewall advanced view.
 
 On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script, and run the command **on the target machine**:
 ```powershell
-ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https
+.\ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https
 ```
 
 If the machine is also part of an high availibility group (Always ON), run also the command:
 ```powershell
-ConfigureWinRM.ps1 <sqlalwaysonlistener.mydomain.local> https
+.\ConfigureWinRM.ps1 <sqlalwaysonlistener.mydomain.local> https
 ```
 
 ## Test WinRM
