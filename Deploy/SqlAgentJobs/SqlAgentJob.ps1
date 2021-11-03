@@ -157,6 +157,7 @@ Class SqlSsisStepJobDefinition : SqlStepJobDefinition {
 	[string] $ssisProjectName
 	[string] $ssisPackageName
 	[string] $ssisEnvironmentName
+	[bool] $ssisIs32bits
 
 	SqlSsisStepJobDefinition()
 		: base() {
@@ -262,9 +263,16 @@ Class SqlSsisStepJobDefinition : SqlStepJobDefinition {
 			Throw [System.ArgumentNullException] "The package name is not specified"
 		}
 		
+		# Build 32 bits mode argument
+		if($this.ssisIs32bits) {
+			$is32bitsMode = "/X86"
+		} else {
+			$is32bitsMode = ""
+		}
+
 		# Build command
 		Write-Host "Build the command to execute in the step"
-		$sqlJobStepCommand = "/ISSERVER ""\""\$catalogName\$folderName\$projectName\$packageName\"""" /SERVER ""\""$targetServerName\"""" /ENVREFERENCE $projectReferenceId /Par ""\""`$ServerOption::LOGGING_LEVEL(Int16)\"""";1 /Par ""\""`$ServerOption::SYNCHRONIZED(Boolean)\"""";True /CALLERINFO SQLAGENT /REPORTING E"
+		$sqlJobStepCommand = "/ISSERVER ""\""\$catalogName\$folderName\$projectName\$packageName\"""" /SERVER ""\""$targetServerName\"""" $is32bitsMode /ENVREFERENCE $projectReferenceId /Par ""\""`$ServerOption::LOGGING_LEVEL(Int16)\"""";1 /Par ""\""`$ServerOption::SYNCHRONIZED(Boolean)\"""";True /CALLERINFO SQLAGENT /REPORTING E"
 		
 		Write-Host "The command is built : $sqlJobStepCommand" -ForegroundColor Magenta
 		
@@ -705,6 +713,12 @@ function LoadConfiguration(
 				$step.ssisProjectName = $coreStep.ssisProjectName
 				$step.ssisPackageName = $coreStep.ssisPackageName
 				$step.ssisEnvironmentName = $coreStep.ssisEnvironmentName
+
+				if(Get-Member -inputobject $coreStep -name "ssisIs32bits" -Membertype Properties) {
+					$step.ssisIs32bits = [bool]$coreStep.ssisIs32bits
+				} else {
+					$step.ssisIs32bits = $false
+				}
 			}
 			elseif ($coreStep.type -eq "TSQL") {
 				$step = New-Object SqlTSqlStepJobDefinition ($coreStep.name, $coreStep.targetServerName, $coreStep.databasename, [int]$onSuccessAction, [int]$onFailAction)
@@ -892,7 +906,8 @@ function DeployJobs(
 		Write-Host "Create the job $sqlJobName" -ForegroundColor Cyan
 
 		Try {
-			$sqlJob=$dbServer.Jobserver.Jobs|where-object {$_.Name -like $sqlJobName}
+			$sqlJob = $dbServer.Jobserver.Jobs|where-object {$_.Name -like $sqlJobName}
+			
 			if (!$sqlJob) {
 				Write-Host "The job $sqlJobName does not exists. Create the job."
 	
@@ -1002,7 +1017,7 @@ function DropJobs(
 		Write-Host "Drop the job $sqlJobName"
 
 		Try {
-			$sqlJob=$dbServer.Jobserver.Jobs|where-object {$_.Name -like $sqlJobName}
+			$sqlJob = $dbServer.Jobserver.Jobs|where-object {$_.Name -like $sqlJobName}
 			if ($sqlJob)
 			{
 				$sqlJob.DropIfExists()
@@ -1053,7 +1068,7 @@ else
 #        {
 #          "type": "TSQL",
 #          "name": "TSQL Step",
-#          "onSuccessAction": 0,
+#          "onSuccessAction": 1,
 #          "onFailAction": 2,
 #          "databasename": "MyDatabase",
 #          "command": "EXEC [dbo].[sp_MyProcedure]"
@@ -1086,14 +1101,27 @@ else
 #        },
 #        {
 #          "type": "SSIS",
-#          "name": "SSIS Step",
+#          "name": "SSIS Step 32 bits",
 #          "databasename": "master",
 #          "onSuccessAction": 0,
-#          "onFailAction": 0,
+#          "onFailAction": 2,
 #          "ssisCatalogName": "SSISDB",
 #          "ssisFolderName": "MyFolder",
 #          "ssisProjectName": "MyProject",
 #          "ssisPackageName": "MyPackage.dtsx",
+#          "ssisEnvironmentName": "MyEnvironment",
+#          "ssisIs32bits": true
+#        },
+#        {
+#          "type": "SSIS",
+#          "name": "SSIS Step",
+#          "databasename": "master",
+#          "onSuccessAction": 1,
+#          "onFailAction": 2,
+#          "ssisCatalogName": "SSISDB",
+#          "ssisFolderName": "MyFolder",
+#          "ssisProjectName": "MyProject",
+#          "ssisPackageName": "MyPackage2.dtsx",
 #          "ssisEnvironmentName": "MyEnvironment"
 #        }
 #      ],
