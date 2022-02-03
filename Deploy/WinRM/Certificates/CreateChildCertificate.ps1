@@ -1,39 +1,31 @@
-# Actions:
-# 1. Process a JSON credentials file (encrypt new passwords)
-
 param (
-	[Parameter(Mandatory=$true,HelpMessage="Base name of the certificate")]
-	[ValidateScript({If ($_) { $True } else { $False } })]
-	[string] $baseName,
-    
 	[Parameter(Mandatory=$true,HelpMessage="Name of the child certificate")]
 	[ValidateScript({If ($_) { $True } else { $False } })]
-	[string] $childName,
+    [string] $childCertificateName,
 
 	[Parameter(Mandatory=$true,HelpMessage="Thumbprint of the root certificate")]
 	[ValidateScript({If ($_) { $True } else { $False } })]
 	[string] $rootCertificateThumbprint,
 
-	[Parameter(HelpMessage="Certificate file path for export. If not set, the certificate is not saved as a file.")]
-    [string] $childCertificateFilePath,
+	[Parameter(HelpMessage="Target directory where to export the generated certificates. If not set, the certificate is not saved to a file.")]
+    [string] $targetDirectoryPath,
 
 	[Parameter(HelpMessage="Specify whether the certificate name, thumbprint and serial number are exported or not.")]
 	[bool] $export = $true
 )
 
-$childCertificateDnsName = "AzureP2S$($baseName)_$($childName)"
-$childCertificateName = "CN=$($childCertificateDnsName))"
+$childCertificateSubject = "CN=$($childCertificateName)"
 
 Write-Host "Generate the child certificate $($childCertificateName)"
 
 Try {
     $certificateLocation = "Cert:\CurrentUser\My"
-    $rootCertificatePath = "$($certificateLocation)\$($rootCertificateThumbprint)"
+    $rootCertificateLocation = "$($certificateLocation)\$($rootCertificateThumbprint)"
 
-    $rootCertificate = Get-ChildItem -Path $rootCertificatePath
+    $rootCertificate = Get-ChildItem -Path $rootCertificateLocation
 
-    $childCertificate =  New-SelfSignedCertificate -Type Custom -DnsName $childCertificateDnsName -KeySpec Signature `
-        -Subject $childCertificateName -KeyExportPolicy Exportable `
+    $childCertificate =  New-SelfSignedCertificate -Type Custom -DnsName $childCertificateName -KeySpec Signature `
+        -Subject $childCertificateSubject -KeyExportPolicy Exportable `
         -HashAlgorithm sha256 -KeyLength 4096 `
         -CertStoreLocation $certificateLocation `
         -Signer $rootCertificate
@@ -60,8 +52,8 @@ if ($exportSerialNumber) {
     $global:childCertificateThumbprint = $childCertificateThumbprint
 }
 
-if(-not([string]::IsNullOrEmpty($childCertificateFilePath))) {
-
+if(-not([string]::IsNullOrEmpty($targetDirectoryPath))) {
+    $childCertificateFilePath = [System.IO.Path]::Combine($targetDirectoryPath, "$($childCertificateName).cer")
     $certificateContent = @(
         '-----BEGIN CERTIFICATE-----'
         [System.Convert]::ToBase64String($childCertificate.RawData, 'InsertLineBreaks')

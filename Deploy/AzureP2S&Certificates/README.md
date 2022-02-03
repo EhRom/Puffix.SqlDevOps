@@ -16,6 +16,11 @@ You will find in this repository some basic scripts to manage your self-signed c
 .\CreateRootSelfSignedCertificate.ps1 -baseName "<base certificate name>" -rootCertificateFilePath .\<root certificate file name>.cer -export $true(default)|$false
 ```
 
+If the parameer *export* is set to true, the following variables are exported:
+- `$rootCertificateName`: contains the name of the generated certificate,
+- `$rootCertificateSerialNumber`: contains the serial number of the generated certificate,
+- `$rootCertificateThumbprint`: contains the thumbprint of the generated certificate.
+
 Sample:
 ```powershell
 $baseName = "MyOrganizationName"
@@ -28,6 +33,11 @@ $rootCertificateFileName = "AzureP2S$($baseName)Root.cer"
 ```powershell
 .\CreateChildCertificate.ps1 -baseName "<base certificate name>" -childName "<child certificate name>" -rootCertificateThumbprint "<root certificate thumbrpint>" -childCertificateFilePath .\<child certificate file name>.cer -export $true(default)|$false
 ```
+
+If the parameer *export* is set to true, the following variables are exported:
+- `$childCertificateName`: contains the name of the generated certificate,
+- `$childCertificateSerialNumber`: contains the serial number of the generated certificate,
+- `$childCertificateThumbprint`: contains the thumbprint of the generated certificate.
 
 Sample (assume the previous sample is executed):
 ```powershell
