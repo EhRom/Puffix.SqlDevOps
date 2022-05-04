@@ -34,5 +34,8 @@ Azure P2S VPN are used to connect your local machine to a Private Virtual Networ
 
 Set up an Azure P2S VPN foolowing and manage self-signed certificates to achieve the VPN setup: [Azure Point-To-Site VPN setup and configuration](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy/AzureP2S%26Certificates)
 
+## Archive Files
+Script to archive files using 7-zip tool. More information: [Archive files](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/ArchiveFiles)
+
 
 [Back to root](https://github.com/EhRom/Puffix.SqlDevOps)
