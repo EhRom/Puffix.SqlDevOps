@@ -31,7 +31,7 @@ Or activate the rules manually in the firewall advanced view.
 
 ## Activate WinRM
 
-On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script, and run the command **on the target machine**:
+On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script (source: [Microsoft Github repo](https://github.com/microsoft/azure-pipelines-extensions/blob/master/TaskModules/powershell/WinRM/WinRM-Http-Https/ConfigureWinRM.ps1), and run the command **on the target machine**:
 
 ```powershell
 .\ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https
@@ -91,7 +91,7 @@ Set-Item WSMan:\localhost\Client\TrustedHosts <fullyqualifiedsourcemachine.mydom
 
 ## See also
 
-More information available on [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-iis-winrm?view=azure-devops#winrm-configuration).
+More information available on [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-iis-winrm).
 
 [Back to Deploy section](https://github.com/EhRom/Puffix.SqlDevOps/tree/master/Deploy)
 
