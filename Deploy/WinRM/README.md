@@ -47,12 +47,22 @@ If the machine is also part of an high availibility group (Always ON), run also 
 
 ## Test WinRM
 
-Test if the connection works from the **source machine**:
+Test if the connection works from the **source machine**. Add `-UseSSL` to force *https* connection, and `-SkipCACheck` if the certificate is self-signed:
 
 ```powershell
-Enter-PSSession <fullyqualifiedservernane.mydomain.local>
+Enter-PSSession <fullyqualifiedservernane.mydomain.local> -UseSSL
 
-Enter-PSSession <sqlalwaysonlistener.mydomain.local>
+Enter-PSSession <sqlalwaysonlistener.mydomain.local> -UseSSL
+```
+
+If the certificate is self-signed, the parameters `-SkipCACheck` can be added, and the `-SkipCNCheck` eventually, if the certificate does not match the machine name:
+
+```powershell
+$psSessionOption = New-PSSessionOption -SkipCACheck [-SkipCNCheck]
+
+Enter-PSSession <fullyqualifiedservernane.mydomain.local> -UseSSL -SessionOption $psSessionOption
+
+Enter-PSSession <sqlalwaysonlistener.mydomain.local> -UseSSL -SessionOption $psSessionOption
 ```
 
 To quit the *PS-Session* enter the `exit` command
