@@ -53,7 +53,7 @@ Additionnaly, you can test if the WinRM source machine is allowed to connect to 
 winrm get winrm/config/client
 ```
 
-To allow the the sur machine, enter the following command (on a Powershell Command Promt on the target machine)
+To allow the source machine, enter the following command (on a Powershell Command Promt on the target machine)
 ```powershell
 Set-Item WSMan:\localhost\Client\TrustedHosts <fullyqualifiedsourcemachine.mydomain.local>
 ```
