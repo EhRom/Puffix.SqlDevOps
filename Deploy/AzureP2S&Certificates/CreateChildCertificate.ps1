@@ -22,7 +22,7 @@ param (
 )
 
 $childCertificateDnsName = "AzureP2S$($baseName)_$($childName)"
-$childCertificateName = "CN=$($childCertificateDnsName))"
+$childCertificateName = "CN=$($childCertificateDnsName)"
 
 Write-Host "Generate the child certificate $($childCertificateName)"
 
