@@ -65,17 +65,45 @@ SqlJobsConfigurationPathPattern=..\{0}\sqljobs-{0}.json
 
 The `sqljobs-<env>.json` file contains the definition of the SQL Agent jobs.
 
-*More to come soon.*
-
 ### Jobs definition
 
+Jobs are the root objects of the JSON configuration file. A job is defined by the following properties:
+
+|Property|Description|Type|Sample value|
+|---|---|:---:|---|
+|**name**|Name of the SQL Agent Job|*ODStoDWH (Prod)*|
+|**ownerLoginName**|Account that runs SQL Agent|string|<ul><li>`<network short name>\<account short name>`</li><li>`NT SERVICE\SQLSERVERAGENT`</li></ul>|
+|**targetServerName**|Name FQDN of the SQL Server|string|<ul><li>`localhost`</li><li>`srv11243.mycompny.local`</li></ul>|
+|**enabled**|Indicates whether the job is enabled or not. |boolean|*true* or *false*|
+|**steps**|List of steps that define the job. See the [steps](#steps-definition) paragraph|list of objects|cf. [steps](#steps-definition) paragraph|
+|**schedules**|List of job schedules. See the [schedules](#schedules-definition) paragraph|list of objects|cf. [schedules](#schedules-definition) paragraph|
+
+Sample:
+
+```json
+{
+  "jobs": [
+    {
+      "name": "<Name of the SQL Agent Job>",
+      "ownerLoginName": "<Account that runs SQL Agent (e.g. <network short name>\\<account short name>>, NT SERVICE\\SQLSERVERAGENT, ...)",
+      "targetServerName": "<Name FQDN of the SQL Server>",
+      "enabled": true,
+      "steps": [
+        //...
+      ],
+      "schedules": [
+        //...
+      ]
+    }
+  ]
+}
+```
+
+### Steps definition
+
 *More to come soon.*
 
-### Steps definiion
-
-*More to come soon.*
-
-### Schedules definiion
+### Schedules definition
 
 *More to come soon.*
 
