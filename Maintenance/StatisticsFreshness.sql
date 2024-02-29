@@ -12,7 +12,7 @@ SELECT	OBJECT_SCHEMA_NAME(stp.[object_id]) AS SchemaName,
 		stp.last_updated AS [LastUpdated],
 		stp.[rows] AS [Rows],
 		stp.rows_sampled AS RowsSampled,
-		ROUND(CAST(stp.rows_sampled AS decimal(10,3)) / CAST(stp.[rows] AS decimal(10,3)) * 100, 3) AS PercentageRowsSampled,
+		ROUND(CAST(stp.rows_sampled AS decimal(19,3)) / CAST(stp.[rows] AS decimal(19,3)) * 100, 3) AS PercentageRowsSampled,
 		stp.steps AS Steps,
 		stp.unfiltered_rows AS UnfilteredRows,
 		stp.modification_counter AS ModificationCounter
