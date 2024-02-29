@@ -1,0 +1,44 @@
+{
+  "jobs": [
+    {
+      "name": "<Name of the SQL Agent Job>",
+      "ownerLoginName": "<Account that runs SQL Agent (e.g. <network short name>\\<account short name>>, NT SERVICE\\SQLSERVERAGENT, ...)",
+      "targetServerName": "<Name FQDN of the SQL Server>",
+      "enabled": true,
+      "steps": [
+        {
+          "type": "SSIS",
+          "name": "<Name of the SSIS step>",
+          "databasename": "<Database name, master by default>",
+          "onSuccessAction": 0,
+          "onFailAction": 2,
+          "ssisCatalogName": "<SSIS catalog name, SSISDB by defautl>",
+          "ssisFolderName": "<SSIS folder name>",
+          "ssisProjectName": "<SSIS project name>",
+          "ssisPackageName": "<SSIS package name>.dtsx",
+          "ssisEnvironmentName": "<SSIS environment name>"
+        },
+        {
+          "type": "TSQL",
+          "name": "<Name of the TSQL step>",
+          "databasename": "<Name of the database>",
+          "onSuccessAction": 1,
+          "onFailAction": 2,
+          "command": "<SQL Command>"
+        }
+      ],
+      "schedules": [
+        {
+          "type": "Recurring",
+          "name": "Recurring Daily (Local) - 6h",
+          "enabled": "true",
+          "frequency": "Daily",
+          "frequencyInterval": "1",
+          "subDayFrequency": "Once",
+          "activeStartDate": "2020-01-01",
+          "activeStartTime": "06:00:00"
+        }
+      ]
+    }
+  ]
+}

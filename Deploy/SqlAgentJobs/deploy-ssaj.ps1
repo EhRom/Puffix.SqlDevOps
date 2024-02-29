@@ -20,7 +20,11 @@ If (-not (Test-Path $settingsFile))
 # LOAD SQL SERVER POWERSHELL MODULE
 ###########################################################################
 Write-Output "Test if SqlServer PowerShell module is installed"
-Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+if ((Get-PackageProvider -ListAvailable | Where-Object Name -eq "NuGet").Count -ne 1) {
+	Install-PackageProvider -Name NuGet -Scope CurrentUser -Force
+}
 
 if (-not (Get-Module -ListAvailable -Name SqlServer)) {
 	Write-Output "Install the PowerShell module"
