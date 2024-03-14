@@ -114,6 +114,7 @@ Common properties
 
 |Property|Description|Type|Sample value|
 |---|---|:---:|---|
+|**type**|Type of the step. See each paragraph for details|string|<ul><li>***TSQL***</li><li>***SSIS***</li></ul>|
 |**name**|Name of the step|string|*1_LoadDataFromOds*|
 |**targetServerName**|The server on which to execute the SQL command|string|<ul><li>`localhost`</li><li>`srv11243.mycompny.local`</li></ul>|
 |**databasename**|The database on which to execute the SQL command|string|`DWH`|
