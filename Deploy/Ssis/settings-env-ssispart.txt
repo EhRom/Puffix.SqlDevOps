@@ -13,6 +13,12 @@ SsisOdsPackagePath=<Path to the ispac file>
 SsisOdsProjectName=<ProjectName>
 SsisOdsEnvironmentNames=<EnvironmentNames>
 
+[SSIS>Datawarehouse]
+SsisDatawarehouseFolderName=<SSIS folder name for packages>
+SsisDatawarehousePackagePath=<Path to the ispac file>
+SsisDatawarehouseProjectName=<ProjectName>
+SsisDatawarehouseEnvironmentNames=<EnvironmentNames>
+
 [SSIS>Datamart]
 SsisDatamartFolderName=<SSIS folder name for packages>
 SsisDatamartPackagePath=<Path to the ispac file>

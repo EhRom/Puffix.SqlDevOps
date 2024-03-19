@@ -31,11 +31,12 @@ foreach-object `
 ###########################################################################
 $ssisEnvironmentScriptPath = [System.IO.Path]::Combine($PSScriptRoot, "SsisPackageAndEnvironment.ps1")
 $ssisPackageConfigurationFullPath = [System.IO.Path]::Combine($PSScriptRoot, [string]::Format($settings.Get_Item("SsisPackageConfigurationPathPattern"),$environment))
-$ssisOdsPackageFullPath = [System.IO.Path]::Combine($PSScriptRoot, $settings.Get_Item("SsisOdsPackagePath"))
-$ssisDatamartPackageFullPath = [System.IO.Path]::Combine($PSScriptRoot, $settings.Get_Item("SsisDatamartPackagePath"))
 
 # ODS
+$ssisOdsPackageFullPath = [System.IO.Path]::Combine($PSScriptRoot, $settings.Get_Item("SsisOdsPackagePath"))
+
 Write-Output "Undeploy SSIS ODS packages"
+
 & $ssisEnvironmentScriptPath `
 	-ssisServerName $settings.Get_Item("TargetMainServerName") `
 	-ssisCatalogName $settings.Get_Item("SsisCatalogName") `
@@ -47,8 +48,27 @@ Write-Output "Undeploy SSIS ODS packages"
 	-ssisPackageConfigurationPath $ssisPackageConfigurationFullPath `
 	-deployPackageAndEnvironment $false
 
+# Datawarehouse
+$ssisDatawarehousePackageFullPath = [System.IO.Path]::Combine($PSScriptRoot, $settings.Get_Item("SsisDatawarehousePackagePath"))
+
+Write-Output "Undeploy SSIS Datawarehouse packages"
+
+& $ssisEnvironmentScriptPath `
+	-ssisServerName $settings.Get_Item("TargetMainServerName") `
+	-ssisCatalogName $settings.Get_Item("SsisCatalogName") `
+	-ssisCatalogPassword $settings.Get_Item("SsisCatalogPassword") `
+	-ssisFolderName $settings.Get_Item("SsisDatawarehouseFolderName") `
+	-ssisPackageFullPath $ssisDatawarehousePackageFullPath `
+	-ssisProjectName $settings.Get_Item("SsisDatawarehouseProjectName") `
+	-ssisEnvironmentNames $settings.Get_Item("SsisDatawarehouseEnvironmentNames") `
+	-ssisPackageConfigurationPath $ssisPackageConfigurationFullPath `
+	-deployPackageAndEnvironment $false
+
 # Datamart
+$ssisDatamartPackageFullPath = [System.IO.Path]::Combine($PSScriptRoot, $settings.Get_Item("SsisDatamartPackagePath"))
+
 Write-Output "Undeploy SSIS Datamart packages"
+
 & $ssisEnvironmentScriptPath `
 	-ssisServerName $settings.Get_Item("TargetMainServerName") `
 	-ssisCatalogName $settings.Get_Item("SsisCatalogName") `
