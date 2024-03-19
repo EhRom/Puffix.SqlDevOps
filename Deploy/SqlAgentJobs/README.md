@@ -191,7 +191,7 @@ Samples:
 ]
 ```
 
-### Schedule definitions
+### Schedules definition
 
 Schedule definitions define when a job will run. This can be:
 
