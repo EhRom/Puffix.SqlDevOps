@@ -7,7 +7,8 @@ To activate WinRM, you need to execute on each target machine (which runs SQL Se
 ## Check PowerShell verion
 
 WinRM requires PowerShell version 4.0 and above. To control the version, use the following command:
-```
+
+```powershell
 $PSVersionTable.PSVersion
 ```
 
@@ -29,13 +30,16 @@ netsh advfirewall monitor show firewall rule name=all
 
 Or activate the rules manually in the firewall advanced view.
 
-## Activate WinRM
+## Activate WinRM with the script
 
-On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script (source: [Microsoft Github repo](https://github.com/microsoft/azure-pipelines-extensions/blob/master/TaskModules/powershell/WinRM/WinRM-Http-Https/ConfigureWinRM.ps1), and run the command **on the target machine**:
+On each server, copy the [ConfigureWinRM.ps1](https://github.com/EhRom/Puffix.SqlDevOps/blob/master/Deploy/WinRM/ConfigureWinRM.ps1) script (source: [Microsoft Github repo](https://github.com/microsoft/azure-pipelines-extensions/blob/master/TaskModules/powershell/WinRM/WinRM-Http-Https/ConfigureWinRM.ps1)), and run the command **on the target machine**:
 
 ```powershell
-.\ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https
+.\ConfigureWinRM.ps1 <fullyqualifiedservernane.mydomain.local> https [certificate thumbprint]
 ```
+
+> - The `certificate thumbprint` parameter is optional and specific to the current repo `ConfigureWinRM.ps1` script. It can be specified if you want to use your own certificate instead of the one auto-generated certificate by the original `ConfigureWinRM.ps1` script. If not specified, an auto-generated certificate will be created.
+> - `fullyqualifiedservernane.mydomain.local` is the fully qualified server name of the **target** machine.
 
 If the machine is also part of an high availibility group (Always ON), run also the command:
 

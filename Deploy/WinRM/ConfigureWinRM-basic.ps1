@@ -10,8 +10,7 @@
 param
 (
     [string] $hostname,
-    [string] $protocol,
-    [string] $certificateThumbprint
+    [string] $protocol
 )
 
 #################################################################################################################################
@@ -24,9 +23,10 @@ $winrmHttpsPort=5986
 
 $helpMsg = "Usage:
             To configure WinRM over Https:
-                ./ConfigureWinRM.ps1 <fqdn\ipaddress> https [<certificate thumbprint>]
+                ./ConfigureWinRM.ps1 <fqdn\ipaddress> https
             To configure WinRM over Http:
-                ./ConfigureWinRM.ps1 <fqdn\ipaddress> http [<certificate thumbprint>]"
+                ./ConfigureWinRM.ps1 <fqdn\ipaddress> http"
+
 
 function Is-InputValid
 {  
@@ -83,17 +83,7 @@ function Configure-WinRMHttpsListener
     Delete-WinRMListener
 
     # Create a test certificate
-
-    if(-not $certificateThumbprint)
-    {
-        $thumbprint = (New-SelfSignedCertificate -DnsName $hostname -CertStoreLocation "cert:\LocalMachine\My").Thumbprint
-    }
-    else
-    {
-        $thumbprint = $certificateThumbprint
-    }
-
-    
+    $thumbprint = (New-SelfSignedCertificate -DnsName $hostname -CertStoreLocation "cert:\LocalMachine\My").Thumbprint
     if(-not $thumbprint)
     {
         throw "Failed to create the test certificate."
