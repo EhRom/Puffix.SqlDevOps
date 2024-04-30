@@ -492,7 +492,7 @@ function DeployPackageAndEnvironment(
 				if (!$ssisParameter)
 				{
 					Write-Host "Adding environment variable $configElementName (Encrypted: $($ssisConfigurationElement.isEncryptedValue) / Sensitive: $($ssisConfigurationElement.isSensitive))" -Foreground Magenta
-					if($ssisConfigurationElement.isEncryptedValue -and $credentialsContainer -ne $null) {
+					if($ssisConfigurationElement.isEncryptedValue -and $null -ne $credentialsContainer) {
 						$opsCredential = $credentialsContainer.GetCredential($ssisConfigurationElement.value)
 						$ssisConfigurationElementValue = $opsCredential.GetPasswordClear($key)
 					} else {

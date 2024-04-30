@@ -1,0 +1,33 @@
+{
+    "elements": [
+      {
+        "name": "ParameterNameA",
+        "description": "Paramter description",
+        "value": "Parameter value",
+        "elementType": 0,
+        "addToProject": true,
+        "packageList": "",
+        "environmentName": "EnvironmentName"
+      },
+      {
+        "name": "ParameterNameB",
+        "description": "Paramter with encrypted value description",
+        "value": "secretReference",
+        "isEncryptedValue": true,
+        "elementType": 0,
+        "isSensitive": true,
+        "addToProject": true,
+        "packageList": "",
+        "environmentName": "EnvironmentName"
+      },
+      {
+        "name": "ParameterNameC",
+        "description": "Paramter description: integer value",
+        "value": "23",
+        "elementType": 6,
+        "addToProject": true,
+        "packageList": "",
+        "environmentName": "EnvironmentName"
+      }
+    ]
+  }
