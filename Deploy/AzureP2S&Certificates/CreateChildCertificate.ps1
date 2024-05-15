@@ -36,7 +36,7 @@ Try {
         -Subject $childCertificateName -KeyExportPolicy Exportable `
         -HashAlgorithm sha256 -KeyLength 4096 `
         -CertStoreLocation $certificateLocation `
-        -Signer $rootCertificate 
+        -Signer $rootCertificate `
         -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
         
     $childCertificateSerialNumber = $childCertificate.GetSerialNumberString()
